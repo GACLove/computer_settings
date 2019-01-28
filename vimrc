@@ -1,6 +1,13 @@
+"vim下载和编译安装
+"git clone git@github.com:vim/vim.git
+"cd vim/
+"./configure --with-features=huge --enable-pythoninterp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
+"make
+"make install
+
+
 " 让配置变更立即生效
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
-
 
 set nocompatible            " 关闭 vi 兼容模式
 syntax enable               " 开启语法高亮功能
@@ -21,7 +28,6 @@ set smartindent             " 开启新行时使用智能自动缩进
 set noswapfile              " 关闭交换文件
 set nobackup                " 关闭备份文件
 set nowb
-set number                  " 显示行号
 set history=1024
 set paste                   " 粘贴时保持格式
 set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
@@ -33,6 +39,7 @@ set nofoldenable            " 默认关闭代码折叠
 set autoread                " 自动加载外部修改
 set wildmenu                " Vim 命令行提示, 自身命令行模式智能补全
 set showcmd                 " 状态栏显示当前执行的命令
+set laststatus=2            " 总是显示状态栏
 
 filetype on                 " 开启文件类型侦测
 filetype plugin indent on   " 根据侦测到的不同类型加载对应的插件
@@ -49,17 +56,23 @@ set lazyredraw              " Don't redraw while executing macros (good performa
 set foldmethod=syntax   " 基于语法进行代码折叠
 set nofoldenable        " 启动 vim 时关闭折叠代码
 
+"set guifont=YaHei\ Consolas\ Hybrid\ 11.5
 "set guifont=Courier_New:h11:cANSI  " 设置字体
 "set guifontwide=新宋体:h11:cGB2312
 
+"set mouse=a 设置鼠标使用
+set gcr=a:block-blinkon0 " 禁止光标闪烁
 
 "set my leader
 let mapleader=","
 
+" 定义快捷键到行首和行尾
+nmap LB 0
+nmap LE $
 
 " 复制当前文件/路径到剪贴板
-nmap <Leader>fn :let @*=substitute(expand("%"), "/", "\\", "g")<CR>
-nmap <Leader>fp :let @*=substitute(expand("%:p"), "/", "\\", "g")<CR>
+nmap <Leader>fn :let @+=substitute(expand("%"), "/", "\\", "g")<CR>
+nmap <Leader>fp :let @+=substitute(expand("%:p"), "/", "\\", "g")<CR>
 nmap <Leader>p "+p   " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <Leader>y "+y " 设置快捷键将系统剪贴板内容粘贴至vim
 
@@ -106,8 +119,12 @@ endif
 
 " plugins {{{
 call plug#begin('~/.vim/plugins')
+    Plug 'vim-scripts/DrawIt'
+    Plug 'tomasr/molokai'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'rickharris/vim-monokai'
 	Plug 'chxuan/change-colorscheme'  " 配色切换
-	Plug 'tomasr/molokai'
+    Plug 'octol/vim-cpp-enhanced-highlight'
 	Plug 'scrooloose/nerdtree'
 	Plug 'Xuyuanp/nerdtree-git-plugin'
 	Plug 'tpope/vim-surround'
@@ -119,8 +136,6 @@ call plug#begin('~/.vim/plugins')
 	Plug 'powerline/powerline'
 	Plug 'maralla/completor.vim'
 	Plug 'scrooloose/nerdcommenter'
-	Plug 'chxuan/tagbar'
-
 	" 注释说明 {{{
 	"<leader>cc   加注释
 	"<leader>cu   解开注释
@@ -129,7 +144,11 @@ call plug#begin('~/.vim/plugins')
 	" 注释的时候自动加个空格, 强迫症必配
 	"let g:NERDSpaceDelims=1
 	" }}}
-	Plug 'rickharris/vim-monokai'
+    Plug 'chxuan/tagbar'
+    Plug 'derekwyatt/vim-fswitch'  "接口与实现快速切换
+    Plug 'derekwyatt/vim-protodef'
+    Plug 'lilydjwg/fcitx.vim'
+    Plug 'dyng/ctrlsf.vim'
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'yianwillis/vimcdoc'  	"中文帮助文档
 
@@ -161,10 +180,31 @@ call plug#begin('~/.vim/plugins')
 	Plug 'junegunn/vim-easy-align'   "对齐
 
 	Plug 'tpope/vim-fugitive' "git wrapper
+
+    " 图标
+    "Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 "}}}
 
 
+""""""""""""""""""""""""""""""
+" => vim-fswitch
+""""""""""""""""""""""""""""""
+nmap <silent> <Leader>sw :FSHere<cr>
+
+""""""""""""""""""""""""""""""
+" => vim-fswitch
+""""""""""""""""""""""""""""""
+"let g:multi_cursor_next_key            = '<C-m>'
+"let g:multi_cursor_prev_key            = '<C-p>'
+let g:multi_cursor_skip_key            = '<C-x>'
+let g:multi_cursor_quit_key            = '<Esc>'
+
+""""""""""""""""""""""""""""""
+" => ctrlsf
+""""""""""""""""""""""""""""""
+nnoremap <Leader>sp :CtrlSF<CR>
 
 
 """"""""""""""""""""""""""""""
@@ -173,9 +213,9 @@ call plug#end()
 nnoremap <C-E>     :NERDTreeToggle<CR>
 nnoremap <Leader>e :NERDTreeToggle<CR>
 let NERDTreeChDirMode=2
-let NERDTreeShowHidden=1
+let NERDTreeShowHidden=1 " 是否显示隐藏文件
 let NERDTreeQuitOnOpen=1
-let NERDTreeShowLineNumbers=1
+let NERDTreeShowLineNumbers=1 " 显示行号
 let NERDTreeIgnore = ['\.pyc$', '__pycache__']
 let g:NERDTreeWinSize=35
 let g:NERDTreeFileExtensionHighlightFullName = 1
@@ -183,6 +223,25 @@ let g:NERDTreeExactMatchHighlightFullName = 1
 let g:NERDTreePatternMatchHighlightFullName = 1
 let g:NERDTreeHighlightFolders = 1         " enables folder icon highlighting using exact match
 let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+let g:NERDTreeDirArrowExpandable = '►'
+let g:NERDTreeDirArrowCollapsible = '▼'
+let NERDTreeAutoCenter=1
+" 在终端启动vim时，共享NERDTree
+let g:nerdtree_tabs_open_on_console_startup=1
+" 忽略一下文件的显示
+let NERDTreeIgnore=['\~$','\.swp', '\.pyc$', '__pycache__']
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹ ",
+    \ "Staged"    : "✚ ",
+    \ "Untracked" : "✭ ",
+    \ "Renamed"   : "➜ ",
+    \ "Unmerged"  : "═ ",
+    \ "Deleted"   : "✖ ",
+    \ "Dirty"     : "✗ ",
+    \ "Clean"     : "✔ ︎",
+    \ 'Ignored'   : '☒ ',
+    \ "Unknown"   : "? "
+    \ }
 
 
 """"""""""""""""""""""""""""""
@@ -238,6 +297,40 @@ let g:lightline = {
       \ 'separator': { 'left': ' ', 'right': ' ' },
       \ 'subseparator': { 'left': ' ', 'right': ' ' }
       \ }
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => ale
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"异步语法检查
+" ale-setting {{{
+let g:ale_set_highlights = 0
+"自定义error和warning图标
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+"在vim自带的状态栏中整合ale
+let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
+"显示Linter名称,出错或警告等相关信息
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"打开文件时不进行检查
+let g:ale_lint_on_enter = 0
+"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
+nmap sp <Plug>(ale_previous_wrap)
+nmap sn <Plug>(ale_next_wrap)
+"<Leader>s触发/关闭语法检查
+nmap <Leader>s :ALEToggle<CR>
+"<Leader>d查看错误或警告的详细信息
+nmap <Leader>d :ALEDetail<CR>
+"使用clang对c和c++进行语法检查，对python使用flake8进行语法检查
+let g:ale_linters = {
+\   'c++': ['clang'],
+\   'c': ['clang'],
+\   'python': ['flake8'],
+\}
+" }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
