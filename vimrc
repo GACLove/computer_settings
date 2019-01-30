@@ -29,7 +29,7 @@ set noswapfile              " 关闭交换文件
 set nobackup                " 关闭备份文件
 set nowb
 set history=1024
-set paste                   " 粘贴时保持格式
+"set paste                   " 粘贴时保持格式
 set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
 set nowrap                  " 取消换行
 set fillchars=vert:\ ,stl:\ ,stlnc:\ " 在被分割的窗口间显示空白，便于阅读
@@ -63,6 +63,8 @@ set nofoldenable        " 启动 vim 时关闭折叠代码
 "set mouse=a 设置鼠标使用
 set gcr=a:block-blinkon0 " 禁止光标闪烁
 
+set undofile
+set undodir=~/.vim/.undo//
 "set my leader
 let mapleader=","
 
@@ -92,7 +94,7 @@ map <C-l> <C-W>l
 map  <F10> :NextColorScheme<CR>
 map  <F9>  :PreviousColorScheme<CR>
 
-command W w !sudo tee % > /dev/null
+"command W w !sudo tee % > /dev/null
 
 
 " Avoid garbled characters in Chinese language windows OS
@@ -223,8 +225,6 @@ let g:NERDTreeExactMatchHighlightFullName = 1
 let g:NERDTreePatternMatchHighlightFullName = 1
 let g:NERDTreeHighlightFolders = 1         " enables folder icon highlighting using exact match
 let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-let g:NERDTreeDirArrowExpandable = '►'
-let g:NERDTreeDirArrowCollapsible = '▼'
 let NERDTreeAutoCenter=1
 " 在终端启动vim时，共享NERDTree
 let g:nerdtree_tabs_open_on_console_startup=1
@@ -345,3 +345,10 @@ let g:go_fmt_command = "goimports"
 let g:tagbar_width = 30
 nnoremap <silent> <leader>t :TagbarToggle<cr>
 inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
+
+
+
+
+
+colorscheme molokai
+"colorscheme solarized
