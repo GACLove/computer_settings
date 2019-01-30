@@ -131,6 +131,7 @@ call plug#begin('~/.vim/plugins')
 	Plug 'Xuyuanp/nerdtree-git-plugin'
 	Plug 'tpope/vim-surround'
 	Plug 'ekalinin/dockerfile.vim'
+    Plug 'Chiel92/vim-autoformat'
 	Plug 'junegunn/fzf'
 	let g:ale_completion_enabled = 1
 	Plug 'w0rp/ale'                  "Asynchronous Lint Engine
@@ -188,6 +189,17 @@ call plug#begin('~/.vim/plugins')
 
 call plug#end()
 "}}}
+
+""""""""""""""""""""""""""""""
+" => ctrlp
+""""""""""""""""""""""""""""""
+let g:ctrlp_map = get(g:,'ctrlp_map', '<c-p>')
+"if you have install ag, the g:ctrlp_custom_ignore will not work
+let g:ctrlp_custom_ignore = get(g:, 'ctrlp_custom_ignore', {
+      \ 'dir':  '\v[\/]\.(git|hg|svn)$|target|node_modules|te?mp$|logs?$|public$|dist$',
+      \ 'file': '\v\.(exe|so|dll|ttf|png|gif|jpe?g|bpm)$|\-rplugin\~',
+      \ 'link': 'some_bad_symbolic_links',
+      \ })
 
 
 """"""""""""""""""""""""""""""
