@@ -44,8 +44,8 @@ set laststatus=2            " 总是显示状态栏
 
 filetype on                 " 开启文件类型侦测
 filetype plugin indent on   " 根据侦测到的不同类型加载对应的插件
-
 filetype indent on          " 自适应不同语言的智能缩进
+
 set expandtab               " 将制表符扩展为空格
 set shiftwidth=4            " 设定 << 和 >> 命令移动时的宽度为 4
 set softtabstop=4           " 使得按退格键时可以一次删掉 4 个空格
@@ -61,7 +61,7 @@ set nofoldenable        " 启动 vim 时关闭折叠代码
 "set guifont=Courier_New:h11:cANSI  " 设置字体
 "set guifontwide=新宋体:h11:cGB2312
 
-"set mouse=a 设置鼠标使用
+" set mouse=a "设置鼠标使用
 set gcr=a:block-blinkon0 " 禁止光标闪烁
 
 set undofile
@@ -87,17 +87,18 @@ vnoremap <Leader>y "+y
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
+inoremap <leader><leader>w <Esc>:w<CR>
+inoremap jj <Esc>`^
+cnoremap w!! w !sudo tee % >/dev/null
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
 
 map  <F10> :NextColorScheme<CR>
 map  <F9>  :PreviousColorScheme<CR>
-
-"command W w !sudo tee % > /dev/null
 
 
 " Avoid garbled characters in Chinese language windows OS
@@ -413,11 +414,5 @@ nmap ss <Plug>(easymotion-s2)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set completeopt-=preview
 
-inoremap <leader><leader>w <Esc>:w<CR>
-inoremap jj <Esc>`^
 
-cnoremap w!! w !sudo tee % >/dev/null
-
-"colorscheme molokai
-"colorscheme solarized
 colorscheme delek
