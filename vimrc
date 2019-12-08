@@ -6,10 +6,10 @@
 "make
 "make install
 
-
 " 让配置变更立即生效
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
+" option-list, :h option-list
 set nocompatible            " 关闭 vi 兼容模式
 syntax enable               " 开启语法高亮功能
 syntax on                   " 自动语法高亮
@@ -53,21 +53,22 @@ set tabstop=4               " 设定 tab 长度为 4
 
 set lazyredraw              " Don't redraw while executing macros (good performance config)
 
-"set foldmethod=indent  " 基于缩进进行代码折叠
+" set foldmethod=indent  " 基于缩进进行代码折叠
 set foldmethod=syntax   " 基于语法进行代码折叠
 set nofoldenable        " 启动 vim 时关闭折叠代码
 
-"set guifont=YaHei\ Consolas\ Hybrid\ 11.5
-"set guifont=Courier_New:h11:cANSI  " 设置字体
-"set guifontwide=新宋体:h11:cGB2312
-
-" set mouse=a "设置鼠标使用
 set gcr=a:block-blinkon0 " 禁止光标闪烁
+
+" set guifont=YaHei\ Consolas\ Hybrid\ 11.5
+" set guifont=Courier_New:h11:cANSI  " 设置字体
+" set guifontwide=新宋体:h11:cGB2312
+" set mouse=a "设置鼠标使用
+
 
 set undofile
 set undodir=~/.vim/.undo/
-"set my leader
-let mapleader=","
+
+let mapleader=","  "set leader
 
 " 定义快捷键到行首和行尾
 nmap LB 0
@@ -76,10 +77,9 @@ nmap LE $
 " 复制当前文件/路径到剪贴板
 nmap <Leader>fn :let @+=substitute(expand("%"), "/", "\\", "g")<CR>
 nmap <Leader>fp :let @+=substitute(expand("%:p"), "/", "\\", "g")<CR>
-" 设置快捷键将选中文本块复制至系统剪贴板
-nmap <Leader>p "+p   
-" 设置快捷键将系统剪贴板内容粘贴至vim
-vnoremap <Leader>y "+y 
+
+nmap <Leader>p "+p   " 设置快捷键将选中文本块复制至系统剪贴板
+vnoremap <Leader>y "+y  " 设置快捷键将系统剪贴板内容粘贴至vim
 
 
 " Visual mode pressing * or # searches for the current selection
@@ -89,6 +89,7 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 inoremap <leader><leader>w <Esc>:w<CR>
 inoremap jj <Esc>`^
+
 cnoremap w!! w !sudo tee % >/dev/null
 
 " Smart way to move between windows
@@ -97,8 +98,9 @@ nnoremap <C-k> <C-W>k
 nnoremap <C-h> <C-W>h
 nnoremap <C-l> <C-W>l
 
-map  <F10> :NextColorScheme<CR>
-map  <F9>  :PreviousColorScheme<CR>
+" 配合：Plug 'chxuan/change-colorscheme'
+map <F10> :NextColorScheme<CR>
+map <F9>  :PreviousColorScheme<CR>
 
 
 " Avoid garbled characters in Chinese language windows OS
@@ -128,48 +130,55 @@ endif
 " plugins {{{
 call plug#begin('~/.vim/plugins')
 
-    Plug 'brooth/far.vim'
-    Plug 'easymotion/vim-easymotion'
+
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    " Plug 'nhinz/vim-startify'
-    Plug 'vim-scripts/DrawIt'
-"    Plug 'tomasr/molokai'
-    Plug 'rickharris/vim-monokai'
-    Plug 'altercation/vim-colors-solarized'
+    "Plug 'powerline/powerline'
     Plug 'chxuan/change-colorscheme'  " 配色切换
-    Plug 'octol/vim-cpp-enhanced-highlight'
-	Plug 'scrooloose/nerdtree'
-	Plug 'Xuyuanp/nerdtree-git-plugin'
-	Plug 'tpope/vim-surround'
-	Plug 'ekalinin/dockerfile.vim'
+
+    "主题
+    Plug 'altercation/vim-colors-solarized'
+
+    " Plug 'nhinz/vim-startify'
+
+    Plug 'vim-scripts/DrawIt'
+
+    Plug 'scrooloose/nerdtree'
+    Plug 'Xuyuanp/nerdtree-git-plugin'
+
+    Plug 'tpope/vim-surround'
+
+    Plug 'ekalinin/dockerfile.vim'
+
     Plug 'sbdchd/neoformat'
-	Plug 'junegunn/fzf'
-	"let g:ale_completion_enabled = 1
-	"Plug 'w0rp/ale'                  "Asynchronous Lint Engine
-	Plug 'kien/ctrlp.vim'
-	Plug 'powerline/powerline'
-	Plug 'maralla/completor.vim'
-	Plug 'scrooloose/nerdcommenter'
-	" 注释说明 {{{
-	"<leader>cc   加注释
-	"<leader>cu   解开注释
-	"<leader>c<space>  加上/解开注释, 智能判断
-	"<leader>cy   先复制, 再注解(p可以进行黏贴)
-	" 注释的时候自动加个空格, 强迫症必配
-	"let g:NERDSpaceDelims=1
-	" }}}
+
+    Plug 'junegunn/fzf.vim'
+    Plug 'kien/ctrlp.vim'
+
+    "let g:ale_completion_enabled = 1
+    "Plug 'w0rp/ale'                  "Asynchronous Lint Engine
+
+     " 注释说明 {{{
+    "<leader>cc   加注释
+    "<leader>cu   解开注释
+    "<leader>c<space>  加上/解开注释, 智能判断
+    "<leader>cy   先复制, 再注解(p可以进行黏贴)
+    " 注释的时候自动加个空格, 强迫症必配
+    "let g:NERDSpaceDelims=1
+    " }}}
+    Plug 'scrooloose/nerdcommenter'
+
     Plug 'chxuan/tagbar'
     Plug 'derekwyatt/vim-fswitch'  "接口与实现快速切换
     Plug 'derekwyatt/vim-protodef'
     Plug 'lilydjwg/fcitx.vim'
     Plug 'dyng/ctrlsf.vim'
-	Plug 'terryma/vim-multiple-cursors'
-	Plug 'yianwillis/vimcdoc'  	"中文帮助文档
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'yianwillis/vimcdoc'  	"中文帮助文档
 
     "markdown
     Plug 'plasticboy/vim-markdown', {'for': 'markdown'} " Markdown 代码高亮，自动格式化
-	Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'} " Markdown 预览
+    Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'} " Markdown 预览
 
     "python
     Plug 'python-mode/python-mode'
@@ -188,31 +197,37 @@ call plug#begin('~/.vim/plugins')
     Plug 'neoclide/vim-jsx-improve', { 'for': ['javascript', 'javascript.jsx'] }
 
     " go
-	Plug 'fatih/vim-go', { 'for': 'go' } " Golang
+    Plug 'fatih/vim-go', { 'for': 'go' } " Golang
 
-	" json
-	Plug 'elzr/vim-json', { 'for': 'json'} " json 语法检查
+    " json
+    Plug 'elzr/vim-json', { 'for': 'json'} " json 语法检查
 
-	Plug 'junegunn/vim-easy-align'   "对齐
+    "git wrapper
+    Plug 'tpope/vim-fugitive'
 
-	Plug 'tpope/vim-fugitive' "git wrapper
+    Plug 'brooth/far.vim'
 
-    " 图标
+    Plug 'easymotion/vim-easymotion'
+
+    Plug 'junegunn/vim-easy-align'   "对齐
     "Plug 'ryanoasis/vim-devicons'
-    
-    "complete
-    if has('nvim')
-      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    else
-      Plug 'Shougo/deoplete.nvim'
-      Plug 'roxma/nvim-yarp'
-      Plug 'roxma/vim-hug-neovim-rpc'
-    endif
-    let g:deoplete#enable_at_startup = 1
-    
+
+
+    " 代码补全工具
+    Plug 'maralla/completor.vim'
+
+    " deoplete
+    "if has('nvim')
+    "    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    "else
+    "    Plug 'Shougo/deoplete.nvim'
+    "    Plug 'roxma/nvim-yarp'
+    "    Plug 'roxma/vim-hug-neovim-rpc'
+    "endif
+
     "LSP
     "coc.vim
-    
+
 call plug#end()
 "}}}
 
@@ -372,7 +387,7 @@ let g:ale_linters = {
 " }}}
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => NERDSpaceDelims  
+" => NERDSpaceDelims
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:NERDSpaceDelims=1
 
@@ -384,7 +399,7 @@ let g:go_fmt_command = "goimports"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" =>python-mode 
+" =>python-mode
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:pymode_python = 'python3'
 let g:pymode_trim_whitespaces = 1
@@ -394,6 +409,7 @@ let g:pymode_rope_goto_definition_bind = '<C-]>'
 let g:pymode_lint = 1
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint']
 let g:pymode_options_max_line_length= 120
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => tagbar
@@ -405,14 +421,18 @@ inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => easymotion 
+" => easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap ss <Plug>(easymotion-s2)
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => deoplete 
+" => deoplete
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set completeopt-=preview
+"set completeopt-=preview
+"let g:deoplete#enable_at_startup = 1
 
 
+"colorscheme solarized
+"set background=dark
 colorscheme delek
