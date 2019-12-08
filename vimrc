@@ -1,3 +1,4 @@
+"curl -fLo ~/.vim/autoload/plug.vim --create-dirs "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "vim下载和编译安装
 "git clone git@github.com:vim/vim.git
 "cd vim/
@@ -13,7 +14,7 @@ set nocompatible            " 关闭 vi 兼容模式
 syntax enable               " 开启语法高亮功能
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
-set cursorline              " 突出显示当前行     cul
+"set cursorline              " 突出显示当前行     cul
 "set cursorcolumn            " 高亮当前列        cuc
 set ruler                   " 打开状态栏标尺
 set nobackup                " 覆盖文件时不备份
@@ -32,7 +33,7 @@ set history=1024
 "set paste                   " 粘贴时保持格式
 set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
 set nowrap                  " 取消换行
-set fillchars=vert:\ ,stl:\ ,stlnc:\ " 在被分割的窗口间显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\  "在被分割的窗口间显示空白，便于阅读
 set fileformat=unix
 set showmatch               " 高亮显示匹配的括号
 set nofoldenable            " 默认关闭代码折叠
@@ -64,7 +65,7 @@ set nofoldenable        " 启动 vim 时关闭折叠代码
 set gcr=a:block-blinkon0 " 禁止光标闪烁
 
 set undofile
-set undodir=~/.vim/.undo//
+set undodir=~/.vim/.undo/
 "set my leader
 let mapleader=","
 
@@ -75,8 +76,10 @@ nmap LE $
 " 复制当前文件/路径到剪贴板
 nmap <Leader>fn :let @+=substitute(expand("%"), "/", "\\", "g")<CR>
 nmap <Leader>fp :let @+=substitute(expand("%:p"), "/", "\\", "g")<CR>
-nmap <Leader>p "+p   " 设置快捷键将选中文本块复制至系统剪贴板
-vnoremap <Leader>y "+y " 设置快捷键将系统剪贴板内容粘贴至vim
+" 设置快捷键将选中文本块复制至系统剪贴板
+nmap <Leader>p "+p   
+" 设置快捷键将系统剪贴板内容粘贴至vim
+vnoremap <Leader>y "+y 
 
 
 " Visual mode pressing * or # searches for the current selection
@@ -100,8 +103,10 @@ map  <F9>  :PreviousColorScheme<CR>
 " Avoid garbled characters in Chinese language windows OS
 let $LANG='en'
 set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
+if has("win16") || has("win32")
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+endif
 
 
 set wildignore=*.o,*~,*.pyc
@@ -121,20 +126,26 @@ endif
 
 " plugins {{{
 call plug#begin('~/.vim/plugins')
+
+    Plug 'brooth/far.vim'
+    Plug 'easymotion/vim-easymotion'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    " Plug 'nhinz/vim-startify'
     Plug 'vim-scripts/DrawIt'
-    Plug 'tomasr/molokai'
-    Plug 'altercation/vim-colors-solarized'
+"    Plug 'tomasr/molokai'
     Plug 'rickharris/vim-monokai'
-	Plug 'chxuan/change-colorscheme'  " 配色切换
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'chxuan/change-colorscheme'  " 配色切换
     Plug 'octol/vim-cpp-enhanced-highlight'
 	Plug 'scrooloose/nerdtree'
 	Plug 'Xuyuanp/nerdtree-git-plugin'
 	Plug 'tpope/vim-surround'
 	Plug 'ekalinin/dockerfile.vim'
-    Plug 'Chiel92/vim-autoformat'
+    Plug 'sbdchd/neoformat'
 	Plug 'junegunn/fzf'
-	let g:ale_completion_enabled = 1
-	Plug 'w0rp/ale'                  "Asynchronous Lint Engine
+	"let g:ale_completion_enabled = 1
+	"Plug 'w0rp/ale'                  "Asynchronous Lint Engine
 	Plug 'kien/ctrlp.vim'
 	Plug 'powerline/powerline'
 	Plug 'maralla/completor.vim'
@@ -160,6 +171,7 @@ call plug#begin('~/.vim/plugins')
 	Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'} " Markdown 预览
 
     "python
+    Plug 'python-mode/python-mode'
 
     " html
     Plug 'othree/html5.vim',       { 'for': 'html' }
@@ -186,7 +198,20 @@ call plug#begin('~/.vim/plugins')
 
     " 图标
     "Plug 'ryanoasis/vim-devicons'
-
+    
+    "complete
+    if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    else
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+    endif
+    let g:deoplete#enable_at_startup = 1
+    
+    "LSP
+    "coc.vim
+    
 call plug#end()
 "}}}
 
@@ -224,6 +249,7 @@ nnoremap <Leader>sp :CtrlSF<CR>
 """"""""""""""""""""""""""""""
 " => NERDTree
 """"""""""""""""""""""""""""""
+"autocmd vimenter * NERDTree
 nnoremap <C-E>     :NERDTreeToggle<CR>
 nnoremap <Leader>e :NERDTreeToggle<CR>
 let NERDTreeChDirMode=2
@@ -260,7 +286,7 @@ let g:NERDTreeIndicatorMapCustom = {
 " => CTRL-P
 """"""""""""""""""""""""""""""
 let g:ctrlp_working_path_mode = 0
-let g:ctrlp_map = '<c-f>'
+let g:ctrlp_map = '<c-p>'
 map <leader>j :CtrlP<cr>
 map <c-b> :CtrlPBuffer<cr>
 let g:ctrlp_max_height = 20
@@ -344,6 +370,11 @@ let g:ale_linters = {
 \}
 " }}}
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDSpaceDelims  
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDSpaceDelims=1
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim-go
@@ -352,15 +383,41 @@ let g:go_fmt_command = "goimports"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" =>python-mode 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:pymode_python = 'python3'
+let g:pymode_trim_whitespaces = 1
+let g:pymode_doc = 1
+let g:pymode_doc_bind = 'K'
+let g:pymode_rope_goto_definition_bind = '<C-]>'
+let g:pymode_lint = 1
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint']
+let g:pymode_options_max_line_length= 120
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => tagbar
+" need install universal-ctags/ctags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:tagbar_width = 30
 nnoremap <silent> <leader>t :TagbarToggle<cr>
 inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => easymotion 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap ss <Plug>(easymotion-s2)
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => deoplete 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set completeopt-=preview
 
+inoremap <leader><leader>w <Esc>:w<CR>
+inoremap jj <Esc>`^
 
-colorscheme molokai
+cnoremap w!! w !sudo tee % >/dev/null
+
+"colorscheme molokai
 "colorscheme solarized
+colorscheme delek
