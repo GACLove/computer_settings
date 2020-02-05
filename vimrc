@@ -11,10 +11,11 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 " option-list, :h option-list
 set nocompatible            " 关闭 vi 兼容模式
+set backspace=indent,eol,start
 syntax enable               " 开启语法高亮功能
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
-"set cursorline              " 突出显示当前行     cul
+set cursorline              " 突出显示当前行     cul
 "set cursorcolumn            " 高亮当前列        cuc
 set ruler                   " 打开状态栏标尺
 set nobackup                " 覆盖文件时不备份
@@ -32,7 +33,7 @@ set nowb
 set history=1024
 "set paste                   " 粘贴时保持格式
 set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
-set nowrap                  " 取消换行
+set nowrap                  " 禁止折行
 set fillchars=vert:\ ,stl:\ ,stlnc:\  "在被分割的窗口间显示空白，便于阅读
 set fileformat=unix
 set showmatch               " 高亮显示匹配的括号
@@ -57,7 +58,7 @@ set lazyredraw              " Don't redraw while executing macros (good performa
 set foldmethod=syntax   " 基于语法进行代码折叠
 set nofoldenable        " 启动 vim 时关闭折叠代码
 
-set gcr=a:block-blinkon0 " 禁止光标闪烁
+" set gcr=a:block-blinkon0 " 禁止光标闪烁
 
 " set guifont=YaHei\ Consolas\ Hybrid\ 11.5
 " set guifont=Courier_New:h11:cANSI  " 设置字体
@@ -155,6 +156,7 @@ call plug#begin('~/.vim/plugins')
     Plug 'junegunn/fzf.vim'
     Plug 'kien/ctrlp.vim'
 
+    Plug 'octol/vim-cpp-enhanced-highlight'
     "let g:ale_completion_enabled = 1
     "Plug 'w0rp/ale'                  "Asynchronous Lint Engine
 
@@ -167,8 +169,7 @@ call plug#begin('~/.vim/plugins')
     "let g:NERDSpaceDelims=1
     " }}}
     Plug 'scrooloose/nerdcommenter'
-
-    Plug 'chxuan/tagbar'
+    Plug 'majutsushi/tagbar'
     Plug 'derekwyatt/vim-fswitch'  "接口与实现快速切换
     Plug 'derekwyatt/vim-protodef'
     Plug 'lilydjwg/fcitx.vim'
@@ -211,10 +212,12 @@ call plug#begin('~/.vim/plugins')
 
     Plug 'junegunn/vim-easy-align'   "对齐
     "Plug 'ryanoasis/vim-devicons'
+    " Plug 'kshenoy/vim-signature' " mark add signs
 
 
     " 代码补全工具
     Plug 'maralla/completor.vim'
+    Plug 'mileszs/ack.vim'
 
     " deoplete
     "if has('nvim')
@@ -297,7 +300,7 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "? "
     \ }
 
-
+let NERDTreeAutoDeleteBuffer=1 "删除文件时候自动删除文件对应的buffer
 """"""""""""""""""""""""""""""
 " => CTRL-P
 """"""""""""""""""""""""""""""
@@ -401,7 +404,7 @@ let g:go_fmt_command = "goimports"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " =>python-mode
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:pymode_python = 'python3'
+" let g:pymode_python = 'python3'
 let g:pymode_trim_whitespaces = 1
 let g:pymode_doc = 1
 let g:pymode_doc_bind = 'K'
@@ -415,7 +418,8 @@ let g:pymode_options_max_line_length= 120
 " => tagbar
 " need install universal-ctags/ctags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:tagbar_width = 30
+let tagbar_left=1
+let g:tagbar_width = 32
 nnoremap <silent> <leader>t :TagbarToggle<cr>
 inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
 
@@ -436,3 +440,4 @@ nmap ss <Plug>(easymotion-s2)
 "colorscheme solarized
 "set background=dark
 colorscheme delek
+
