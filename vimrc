@@ -10,6 +10,19 @@
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 " option-list, :h option-list
+
+"编码设置  
+set enc=utf-8  
+set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936  
+
+"语言设置  
+set langmenu=zh_CN.UTF-8  
+set helplang=cn   
+
+set cmdheight=2
+
+set noeb  " 去掉输入错误的提示声音  
+set confirm " 在处理未保存或只读文件的时候，弹出确认  
 set nocompatible            " 关闭 vi 兼容模式
 set backspace=indent,eol,start
 syntax enable               " 开启语法高亮功能
@@ -18,7 +31,6 @@ set number                  " 显示行号
 set cursorline              " 突出显示当前行     cul
 "set cursorcolumn            " 高亮当前列        cuc
 set ruler                   " 打开状态栏标尺
-set nobackup                " 覆盖文件时不备份
 set autochdir               " 自动切换当前目录为当前文件所在的目录
 "set backupcopy=yes          " 设置备份时的行为为覆盖
 set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
@@ -29,6 +41,7 @@ set noerrorbells            " 关闭错误信息响铃
 set smartindent             " 开启新行时使用智能自动缩进
 set noswapfile              " 关闭交换文件
 set nobackup                " 关闭备份文件
+set nowritebackup
 set nowb
 set history=1024
 "set paste                   " 粘贴时保持格式
@@ -37,6 +50,7 @@ set nowrap                  " 禁止折行
 set fillchars=vert:\ ,stl:\ ,stlnc:\  "在被分割的窗口间显示空白，便于阅读
 set fileformat=unix
 set showmatch               " 高亮显示匹配的括号
+set matchtime=10            " 高亮显示匹配的括号时间
 set nofoldenable            " 默认关闭代码折叠
 set autoread                " 自动加载外部修改
 set wildmenu                " Vim 命令行提示, 自身命令行模式智能补全
@@ -52,19 +66,29 @@ set shiftwidth=4            " 设定 << 和 >> 命令移动时的宽度为 4
 set softtabstop=4           " 使得按退格键时可以一次删掉 4 个空格
 set tabstop=4               " 设定 tab 长度为 4
 
+set ttyfast                 " Improves smoothness of redrawing 
 set lazyredraw              " Don't redraw while executing macros (good performance config)
 
 " set foldmethod=indent  " 基于缩进进行代码折叠
 set foldmethod=syntax   " 基于语法进行代码折叠
 set nofoldenable        " 启动 vim 时关闭折叠代码
 
+set whichwrap=h,l,b,s,<,>,[,]
+
+set nospell               " turn spell check off
+
 " set gcr=a:block-blinkon0 " 禁止光标闪烁
 
 " set guifont=YaHei\ Consolas\ Hybrid\ 11.5
 " set guifont=Courier_New:h11:cANSI  " 设置字体
 " set guifontwide=新宋体:h11:cGB2312
-" set mouse=a "设置鼠标使用
 
+" 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）  
+" set mouse=a  
+" set selection=exclusive  
+" set selectmode=mouse,key
+
+set clipboard=exclude:.* " 加快vim加载
 
 set undofile
 set undodir=~/.vim/.undo/
@@ -134,21 +158,18 @@ call plug#begin('~/.vim/plugins')
 
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    "Plug 'powerline/powerline'
-    Plug 'chxuan/change-colorscheme'  " 配色切换
-
-    "主题
     Plug 'altercation/vim-colors-solarized'
 
-    " Plug 'nhinz/vim-startify'
-
-    Plug 'vim-scripts/DrawIt'
+    Plug 'chxuan/change-colorscheme'  " 配色切换
 
     Plug 'scrooloose/nerdtree'
-    Plug 'Xuyuanp/nerdtree-git-plugin'
+    Plug 'scrooloose/nerdcommenter'
+    Plug 'scrooloose/syntastic'
 
     Plug 'tpope/vim-surround'
-
+    if version >=704
+        Plug 'tpope/vim-fugitive'
+    endif
     Plug 'ekalinin/dockerfile.vim'
 
     Plug 'sbdchd/neoformat'
@@ -157,8 +178,6 @@ call plug#begin('~/.vim/plugins')
     Plug 'kien/ctrlp.vim'
 
     Plug 'octol/vim-cpp-enhanced-highlight'
-    "let g:ale_completion_enabled = 1
-    "Plug 'w0rp/ale'                  "Asynchronous Lint Engine
 
      " 注释说明 {{{
     "<leader>cc   加注释
@@ -168,7 +187,6 @@ call plug#begin('~/.vim/plugins')
     " 注释的时候自动加个空格, 强迫症必配
     "let g:NERDSpaceDelims=1
     " }}}
-    Plug 'scrooloose/nerdcommenter'
     Plug 'majutsushi/tagbar'
     Plug 'derekwyatt/vim-fswitch'  "接口与实现快速切换
     Plug 'derekwyatt/vim-protodef'
@@ -204,47 +222,25 @@ call plug#begin('~/.vim/plugins')
     Plug 'elzr/vim-json', { 'for': 'json'} " json 语法检查
 
     "git wrapper
-    Plug 'tpope/vim-fugitive'
-
     Plug 'brooth/far.vim'
-
     Plug 'easymotion/vim-easymotion'
-
     Plug 'junegunn/vim-easy-align'   "对齐
-    "Plug 'ryanoasis/vim-devicons'
-    " Plug 'kshenoy/vim-signature' " mark add signs
+    " Plug 'ryanoasis/vim-devicons'
+    Plug 'kshenoy/vim-signature' " mark add signs
 
+    if version >= 703 && has('lua')
+        Plug 'Shougo/neocomplete.vim'
+    endif
 
     " 代码补全工具
     Plug 'maralla/completor.vim'
     Plug 'mileszs/ack.vim'
-
-    " deoplete
-    "if has('nvim')
-    "    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    "else
-    "    Plug 'Shougo/deoplete.nvim'
-    "    Plug 'roxma/nvim-yarp'
-    "    Plug 'roxma/vim-hug-neovim-rpc'
-    "endif
 
     "LSP
     "coc.vim
 
 call plug#end()
 "}}}
-
-""""""""""""""""""""""""""""""
-" => ctrlp
-""""""""""""""""""""""""""""""
-let g:ctrlp_map = get(g:,'ctrlp_map', '<c-p>')
-"if you have install ag, the g:ctrlp_custom_ignore will not work
-let g:ctrlp_custom_ignore = get(g:, 'ctrlp_custom_ignore', {
-      \ 'dir':  '\v[\/]\.(git|hg|svn)$|target|node_modules|te?mp$|logs?$|public$|dist$',
-      \ 'file': '\v\.(exe|so|dll|ttf|png|gif|jpe?g|bpm)$|\-rplugin\~',
-      \ 'link': 'some_bad_symbolic_links',
-      \ })
-
 
 """"""""""""""""""""""""""""""
 " => vim-fswitch
@@ -275,7 +271,6 @@ let NERDTreeChDirMode=2
 let NERDTreeShowHidden=1 " 是否显示隐藏文件
 let NERDTreeQuitOnOpen=1
 let NERDTreeShowLineNumbers=1 " 显示行号
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
 let g:NERDTreeWinSize=35
 let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
@@ -332,10 +327,6 @@ let g:multi_cursor_quit_key            = '<Esc>'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:lightline = {
       \ 'colorscheme': 'wombat',
-      \ }
-
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ ['mode', 'paste'],
       \             ['fugitive', 'readonly', 'filename', 'modified'] ],
@@ -356,53 +347,18 @@ let g:lightline = {
       \ }
 
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => ale
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"异步语法检查
-" ale-setting {{{
-let g:ale_set_highlights = 0
-"自定义error和warning图标
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚡'
-"在vim自带的状态栏中整合ale
-let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
-"显示Linter名称,出错或警告等相关信息
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-"打开文件时不进行检查
-let g:ale_lint_on_enter = 0
-"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
-nmap sp <Plug>(ale_previous_wrap)
-nmap sn <Plug>(ale_next_wrap)
-"<Leader>s触发/关闭语法检查
-nmap <Leader>s :ALEToggle<CR>
-"<Leader>d查看错误或警告的详细信息
-nmap <Leader>d :ALEDetail<CR>
-"使用clang对c和c++进行语法检查，对python使用flake8进行语法检查
-let g:ale_linters = {
-\   'c++': ['clang'],
-\   'c': ['clang'],
-\   'python': ['flake8'],
-\}
-" }}}
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NERDSpaceDelims
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:NERDSpaceDelims=1
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim-go
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:go_fmt_command = "goimports"
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" =>python-mode
+" => python-mode
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " let g:pymode_python = 'python3'
 let g:pymode_trim_whitespaces = 1
@@ -423,21 +379,28 @@ let g:tagbar_width = 32
 nnoremap <silent> <leader>t :TagbarToggle<cr>
 inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => easymotion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap ss <Plug>(easymotion-s2)
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => deoplete
+" => neocomplete
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set completeopt-=preview
-"let g:deoplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 1
 
 
-"colorscheme solarized
-"set background=dark
+"/////////////////////////////////////////////////////////////////////////////
+" Default colorscheme setup
+"/////////////////////////////////////////////////////////////////////////////
+
+if has('gui_running')
+    set background=dark
+else
+    set background=dark
+    set t_Co=256 " make sure our terminal use 256 color
+    let g:solarized_termcolors = 256
+endif
+" colorscheme solarized
 colorscheme delek
 
