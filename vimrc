@@ -12,12 +12,12 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 " option-list, :h option-list
 
 "编码设置  
-set enc=utf-8  
+set encoding=utf-8
 set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936  
 
 "语言设置  
-set langmenu=zh_CN.UTF-8  
-set helplang=cn   
+set langmenu=zh_CN.UTF-8
+set helplang=cn
 
 set cmdheight=2
 
@@ -38,14 +38,13 @@ set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以�
 set incsearch               " 输入搜索内容时就显示搜索结果
 set hlsearch                " 搜索时高亮显示被找到的文本
 set noerrorbells            " 关闭错误信息响铃
+set visualbell              " 视觉提示
 set smartindent             " 开启新行时使用智能自动缩进
 set noswapfile              " 关闭交换文件
 set nobackup                " 关闭备份文件
 set nowritebackup
-set nowb
 set history=1024
 "set paste                   " 粘贴时保持格式
-set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
 set nowrap                  " 禁止折行
 set fillchars=vert:\ ,stl:\ ,stlnc:\  "在被分割的窗口间显示空白，便于阅读
 set fileformat=unix
@@ -53,14 +52,21 @@ set showmatch               " 高亮显示匹配的括号
 set matchtime=10            " 高亮显示匹配的括号时间
 set nofoldenable            " 默认关闭代码折叠
 set autoread                " 自动加载外部修改
-set wildmenu                " Vim 命令行提示, 自身命令行模式智能补全
 set showcmd                 " 状态栏显示当前执行的命令
+set showmode
 set laststatus=2            " 总是显示状态栏
+
+set listchars=tab:»■,trail:■ "行尾有多余的空格（包括 Tab 键），该配置将让这些空格显示成可见的小方块
+set list
+
+set wildmenu                " Vim 命令行提示, 自身命令行模式智能补全
+set wildmode=longest:list,full
 
 filetype on                 " 开启文件类型侦测
 filetype plugin indent on   " 根据侦测到的不同类型加载对应的插件
 filetype indent on          " 自适应不同语言的智能缩进
 
+set autoindent              " 继承前一行的缩进方式，特别适用于多行注释
 set expandtab               " 将制表符扩展为空格
 set shiftwidth=4            " 设定 << 和 >> 命令移动时的宽度为 4
 set softtabstop=4           " 使得按退格键时可以一次删掉 4 个空格
@@ -123,6 +129,13 @@ nnoremap <C-k> <C-W>k
 nnoremap <C-h> <C-W>h
 nnoremap <C-l> <C-W>l
 
+
+map <leader>1 :b 1<CR>
+map <leader>2 :b 2<CR>
+map <leader>3 :b 3<CR>
+map <leader>4 :b 4<CR>
+
+
 " 配合：Plug 'chxuan/change-colorscheme'
 map <F10> :NextColorScheme<CR>
 map <F9>  :PreviousColorScheme<CR>
@@ -135,7 +148,6 @@ if has("win16") || has("win32")
     source $VIMRUNTIME/delmenu.vim
     source $VIMRUNTIME/menu.vim
 endif
-
 
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
@@ -154,240 +166,30 @@ endif
 
 " plugins {{{
 call plug#begin('~/.vim/plugins')
-
-
+    Plug 'chxuan/change-colorscheme' " 配色切换
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    Plug 'altercation/vim-colors-solarized'
-
-    Plug 'chxuan/change-colorscheme'  " 配色切换
 
     Plug 'scrooloose/nerdtree'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'scrooloose/syntastic'
-
-    Plug 'tpope/vim-surround'
-    if version >=704
-        Plug 'tpope/vim-fugitive'
-    endif
-    Plug 'ekalinin/dockerfile.vim'
-
-    Plug 'sbdchd/neoformat'
-
-    Plug 'junegunn/fzf.vim'
-    Plug 'kien/ctrlp.vim'
-
+    Plug 'altercation/vim-colors-solarized'
     Plug 'octol/vim-cpp-enhanced-highlight'
-
-     " 注释说明 {{{
-    "<leader>cc   加注释
-    "<leader>cu   解开注释
-    "<leader>c<space>  加上/解开注释, 智能判断
-    "<leader>cy   先复制, 再注解(p可以进行黏贴)
-    " 注释的时候自动加个空格, 强迫症必配
-    "let g:NERDSpaceDelims=1
-    " }}}
-    Plug 'majutsushi/tagbar'
-    Plug 'derekwyatt/vim-fswitch'  "接口与实现快速切换
-    Plug 'derekwyatt/vim-protodef'
-    Plug 'lilydjwg/fcitx.vim'
-    Plug 'dyng/ctrlsf.vim'
-    Plug 'terryma/vim-multiple-cursors'
-    Plug 'yianwillis/vimcdoc'  	"中文帮助文档
-
-    "markdown
-    Plug 'plasticboy/vim-markdown', {'for': 'markdown'} " Markdown 代码高亮，自动格式化
-    Plug 'iamcco/markdown-preview.vim', {'for': 'markdown'} " Markdown 预览
-
-    "python
-    Plug 'python-mode/python-mode'
-
-    " html
-    Plug 'othree/html5.vim',       { 'for': 'html' }
-    Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
-    Plug 'mattn/emmet-vim',        { 'for': [ 'html', 'vue', 'css' ] }
-
-    "c c++
-    Plug 'rhysd/vim-clang-format',           { 'for': [ 'c', 'cpp' ] }
-    Plug 'octol/vim-cpp-enhanced-highlight', { 'for': [ 'c', 'cpp' ] }
-
-    " javaScript
-    Plug 'pangloss/vim-javascript',  { 'for': ['javascript'] }
-    Plug 'neoclide/vim-jsx-improve', { 'for': ['javascript', 'javascript.jsx'] }
-
-    " go
-    Plug 'fatih/vim-go', { 'for': 'go' } " Golang
-
-    " json
-    Plug 'elzr/vim-json', { 'for': 'json'} " json 语法检查
-
-    "git wrapper
-    Plug 'brooth/far.vim'
     Plug 'easymotion/vim-easymotion'
-    Plug 'junegunn/vim-easy-align'   "对齐
-    " Plug 'ryanoasis/vim-devicons'
-    Plug 'kshenoy/vim-signature' " mark add signs
-
-    if version >= 703 && has('lua')
-        Plug 'Shougo/neocomplete.vim'
-    endif
-
-    " 代码补全工具
-    Plug 'maralla/completor.vim'
-    Plug 'mileszs/ack.vim'
-
-    "LSP
-    "coc.vim
 
 call plug#end()
 "}}}
 
-""""""""""""""""""""""""""""""
-" => vim-fswitch
-""""""""""""""""""""""""""""""
-nmap <silent> <Leader>sw :FSHere<cr>
-
-""""""""""""""""""""""""""""""
-" => vim-fswitch
-""""""""""""""""""""""""""""""
-"let g:multi_cursor_next_key            = '<C-m>'
-"let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
-
-""""""""""""""""""""""""""""""
-" => ctrlsf
-""""""""""""""""""""""""""""""
-nnoremap <Leader>sp :CtrlSF<CR>
 
 
-""""""""""""""""""""""""""""""
-" => NERDTree
-""""""""""""""""""""""""""""""
-"autocmd vimenter * NERDTree
-nnoremap <C-E>     :NERDTreeToggle<CR>
-nnoremap <Leader>e :NERDTreeToggle<CR>
-let NERDTreeChDirMode=2
-let NERDTreeShowHidden=1 " 是否显示隐藏文件
-let NERDTreeQuitOnOpen=1
-let NERDTreeShowLineNumbers=1 " 显示行号
-let g:NERDTreeWinSize=35
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
-let g:NERDTreeHighlightFolders = 1         " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-let NERDTreeAutoCenter=1
-" 在终端启动vim时，共享NERDTree
-let g:nerdtree_tabs_open_on_console_startup=1
-" 忽略一下文件的显示
-let NERDTreeIgnore=['\~$','\.swp', '\.pyc$', '__pycache__']
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹ ",
-    \ "Staged"    : "✚ ",
-    \ "Untracked" : "✭ ",
-    \ "Renamed"   : "➜ ",
-    \ "Unmerged"  : "═ ",
-    \ "Deleted"   : "✖ ",
-    \ "Dirty"     : "✗ ",
-    \ "Clean"     : "✔ ︎",
-    \ 'Ignored'   : '☒ ',
-    \ "Unknown"   : "? "
-    \ }
-
-let NERDTreeAutoDeleteBuffer=1 "删除文件时候自动删除文件对应的buffer
-""""""""""""""""""""""""""""""
-" => CTRL-P
-""""""""""""""""""""""""""""""
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_map = '<c-p>'
-map <leader>j :CtrlP<cr>
-map <c-b> :CtrlPBuffer<cr>
-let g:ctrlp_max_height = 20
-let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => vim-multiple-cursors
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:multi_cursor_use_default_mapping=0
-" Default mapping
-let g:multi_cursor_start_word_key      = '<C-s>'
-let g:multi_cursor_select_all_word_key = '<A-s>'
-let g:multi_cursor_start_key           = 'g<C-s>'
-let g:multi_cursor_select_all_key      = 'g<A-s>'
-let g:multi_cursor_next_key            = '<C-s>'
-let g:multi_cursor_prev_key            = '<C-p>'
-let g:multi_cursor_skip_key            = '<C-x>'
-let g:multi_cursor_quit_key            = '<Esc>'
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => lightline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
-      \ },
-      \ 'separator': { 'left': ' ', 'right': ' ' },
-      \ 'subseparator': { 'left': ' ', 'right': ' ' }
-      \ }
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => NERDSpaceDelims
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:NERDSpaceDelims=1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim-go
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:go_fmt_command = "goimports"
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => python-mode
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" let g:pymode_python = 'python3'
-let g:pymode_trim_whitespaces = 1
-let g:pymode_doc = 1
-let g:pymode_doc_bind = 'K'
-let g:pymode_rope_goto_definition_bind = '<C-]>'
-let g:pymode_lint = 1
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint']
-let g:pymode_options_max_line_length= 120
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => tagbar
-" need install universal-ctags/ctags
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let tagbar_left=1
-let g:tagbar_width = 32
-nnoremap <silent> <leader>t :TagbarToggle<cr>
-inoremap <silent> <leader>t <esc> :TagbarToggle<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => easymotion
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap ss <Plug>(easymotion-s2)
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => neocomplete
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:neocomplete#enable_at_startup = 1
 
 
 "/////////////////////////////////////////////////////////////////////////////
@@ -404,3 +206,21 @@ endif
 " colorscheme solarized
 colorscheme delek
 
+" ctags -R: 生成tag文件，-R表示也为子目录中的文件生成tags
+" :set tags=path/tags -- 告诉ctags使用哪个tag文件
+" :tag xyz -- 跳到xyz的定义处，或者将光标放在xyz上按C-]，返回用C-t
+" :stag xyz -- 用分割的窗口显示xyz的定义，或者C-w ]， 如果用C-w n ]，就会打开一个n行高的窗口
+" :ptag xyz -- 在预览窗口中打开xyz的定义，热键是C-w }。
+" :pclose -- 关闭预览窗口。热键是C-w z。
+" :pedit abc.h -- 在预览窗口中编辑abc.h
+" :psearch abc -- 搜索当前文件和当前文件include的文件，显示包含abc的行。
+
+" C-x C-s -- 拼写建议。
+" C-x C-v -- 补全vim选项和命令。
+" C-x C-l -- 整行补全。
+" C-x C-f -- 自动补全文件路径。弹出菜单后，按C-f循环选择，当然也可以按 C-n和C-p。
+" C-x C-p 和C-x C-n -- 用文档中出现过的单词补全当前的词。 直接按C-p和C-n也可以。
+" C-x C-o -- 编程时可以补全关键字和函数名啊。
+" C-x C-i -- 根据头文件内关键字补全。
+" C-x C-d -- 补全宏定义。
+" C-x C-n -- 按缓冲区中出现过的关键字补全。 直接按C-n或C-p即可。
