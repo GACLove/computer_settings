@@ -137,8 +137,8 @@ map <leader>4 :b 4<CR>
 
 
 " 配合：Plug 'chxuan/change-colorscheme'
-map <F10> :NextColorScheme<CR>
-map <F9>  :PreviousColorScheme<CR>
+map <F9> :NextColorScheme<CR>
+map <F8>  :PreviousColorScheme<CR>
 
 
 " Avoid garbled characters in Chinese language windows OS
