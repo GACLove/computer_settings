@@ -29,12 +29,12 @@ syntax enable               " 开启语法高亮功能
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
 set cursorline              " 突出显示当前行     cul
-"set cursorcolumn            " 高亮当前列        cuc
+"set cursorcolumn           " 高亮当前列        cuc
 set ruler                   " 打开状态栏标尺
 set autochdir               " 自动切换当前目录为当前文件所在的目录
-"set backupcopy=yes          " 设置备份时的行为为覆盖
+"set backupcopy=yes         " 设置备份时的行为为覆盖
 set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
-"set nowrapscan              " 禁止在搜索到文件两端时重新搜索
+"set nowrapscan             " 禁止在搜索到文件两端时重新搜索
 set incsearch               " 输入搜索内容时就显示搜索结果
 set hlsearch                " 搜索时高亮显示被找到的文本
 set noerrorbells            " 关闭错误信息响铃
@@ -99,6 +99,8 @@ set clipboard=exclude:.* " 加快vim加载
 set undofile
 set undodir=~/.vim/.undo/
 
+set foldmethod=diff
+
 let mapleader=","  "set leader
 
 " 定义快捷键到行首和行尾
@@ -124,22 +126,19 @@ inoremap jj <Esc>`^
 cnoremap w!! w !sudo tee % >/dev/null
 
 " Smart way to move between windows
-nnoremap <C-j> <C-W>j
-nnoremap <C-k> <C-W>k
-nnoremap <C-h> <C-W>h
-nnoremap <C-l> <C-W>l
+" nnoremap <C-j> <C-W>j
+" nnoremap <C-k> <C-W>k
+" nnoremap <C-h> <C-W>h
+" nnoremap <C-l> <C-W>l
 
-
-map <leader>1 :b 1<CR>
-map <leader>2 :b 2<CR>
-map <leader>3 :b 3<CR>
-map <leader>4 :b 4<CR>
-
+" map <leader>1 :b 1<CR>
+" map <leader>2 :b 2<CR>
+" map <leader>3 :b 3<CR>
+" map <leader>4 :b 4<CR>
 
 " 配合：Plug 'chxuan/change-colorscheme'
 map <F9> :NextColorScheme<CR>
 map <F8>  :PreviousColorScheme<CR>
-
 
 " Avoid garbled characters in Chinese language windows OS
 let $LANG='en'
@@ -164,38 +163,47 @@ if has("gui_running")
     set guitablabel=%M\ %t
 endif
 
+
+
+" ==> plugin -----------------------------------------------------------------
+if has("win16") || has("win32")
+else
+    if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.GitHub.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+endif
+
 " plugins {{{
 call plug#begin('~/.vim/plugins')
     Plug 'chxuan/change-colorscheme' " 配色切换
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-
-    Plug 'scrooloose/nerdtree'
     Plug 'altercation/vim-colors-solarized'
-    Plug 'octol/vim-cpp-enhanced-highlight'
+    Plug 'NLKNguyen/papercolor-theme'
+
+    Plug 'preservim/nerdcommenter'
+    Plug 'tpope/vim-unimpaired' "遍历 ]b和[b循环遍历缓冲区 ]l和[l遍历位置列表 ]q和[q遍历快速修复列表 ]t和[t遍历标签列表 ]f和[f循环遍历同一目录中的文件，并打开为当前缓冲区。
     Plug 'easymotion/vim-easymotion'
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'mileszs/ack.vim'
+    Plug 'junegunn/goyo.vim', {'for': 'markdown'}
+    Plug 'sjl/gundo.vim'
+    " Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } " sudo apt-get install cmake llvm
+    " Plug 'tpope/vim-fugitive'
+    " Plug 'vim-syntastic/Syntastic'
+    " Plug 'tpope/vim-vinegar'  "Netrw
 
 call plug#end()
 "}}}
 
 
+let g:ctrlp_working_path_mode = "ra"
+noremap <leader>p :CtrlP<cr>
 
 
 
-
-
-
-
-
-
-
-
-
-
-"/////////////////////////////////////////////////////////////////////////////
-" Default colorscheme setup
-"/////////////////////////////////////////////////////////////////////////////
-
+" ==> 配色 -----------------------------------------------------------------
 if has('gui_running')
     set background=dark
 else
@@ -203,9 +211,16 @@ else
     set t_Co=256 " make sure our terminal use 256 color
     let g:solarized_termcolors = 256
 endif
+colorscheme PaperColor
 " colorscheme solarized
-colorscheme delek
+" colorscheme delek
 
+
+
+
+
+
+" ==> FAQ -----------------------------------------------------------------
 " ctags -R: 生成tag文件，-R表示也为子目录中的文件生成tags
 " :set tags=path/tags -- 告诉ctags使用哪个tag文件
 " :tag xyz -- 跳到xyz的定义处，或者将光标放在xyz上按C-]，返回用C-t
@@ -224,3 +239,30 @@ colorscheme delek
 " C-x C-i -- 根据头文件内关键字补全。
 " C-x C-d -- 补全宏定义。
 " C-x C-n -- 按缓冲区中出现过的关键字补全。 直接按C-n或C-p即可。
+
+" help xxx + ctrl_D,  ctrl + ] 打开链接
+" Netrw :Ex, :Vex ：Sex :Lex
+" 寄存器：  ctrl + r 允许在插入模式和命令模式下粘贴缪戈寄存器的内容，
+" %存储了当前文件名，#存储了上次打开的文件名，.中为最后插入的文本，:为最后执行的命令
+" *系统的主粘贴板（windows/macos默认粘贴板，Linux为鼠标选择内容） + windows(ctrl+c、ctrl+v)
+" set clipboard=unamed，unnamedplus 「 复制到系统寄存器(*, +)
+" %USERPROFILE%
+" vim --startuptime startuptime.log 分析启动时间， :profile start profile.log  :profile func* :profile file* 分析运行速度
+" set foldmethod=indent  对于浏览大型文件
+" 模式： normal 
+" command line mode  ctrl+p/n  ctrl+f/ctrl+c
+" 插入模式： ctrl+o 执行命令， ctrl+r 粘贴寄存器
+" 可视模式 （如果需要选择的文本不属于已定义的文本对象（单词、句子sentence和段落paragraph等），则这个模式非常有用， gv 上一次select
+" terminal 模式
+" 命令映射， help index/  :map :rem
+" :help complete  ctrl+n/ctrl+p   ctrl+o - ctrl+i/ctrl+j/ctrl+f
+" sudo apt-get install ctags / ctags -R / set tags=tags;
+" help undo-tree
+" vimdiff dp(cur->other)/do(cur<-other) [c ]c / :diffu 
+" 快速恢复列表： :cnext :copen :cprev :cw ; 位置列表 :ln :lp :lopen ::lclose  :lwindow
+" :make -> :compiler/:set errorformat/:set makeprg
+" 区间： 区间范围用；组合  :help comdline-ranges  例如：:12;/dog/s/animal/creature/g
+" 精确匹配 animal animals  /\<animal\> 
+" arg  :argdo :args  :set hidden  :wa  :argdo execute ":normal @a" | update
+" :help oridinary-atom    :help characters-classes  :help multi \_ ^ $ \< \> \| \(\)
+" :qaq   :@a  :@@  :new  "ap  _"ay$
