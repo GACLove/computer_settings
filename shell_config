@@ -1,0 +1,5 @@
+# .bashrc/.bash_profile 代理设置：
+# 定义代理地址变量
+export http_proxy_value="http://xxxx"
+alias proxy_on='export http_proxy=$http_proxy_value; export HTTP_PROXY=$http_proxy_value; export https_proxy=$http_proxy_value; export HTTPS_PROXY=$http_proxy_value; echo "Proxy enabled: $http_proxy_value"'
+alias proxy_off='unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY; echo "Proxy disabled"'
